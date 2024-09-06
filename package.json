@@ -1,0 +1,47 @@
+{
+  "name": "wato",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
+    "@hello-pangea/dnd": "^16.6.0",
+    "@web3auth/base": "^8.12.4",
+    "@web3auth/ethereum-provider": "^8.12.4",
+    "@web3auth/modal": "^8.12.7",
+    "antd": "^5.20.3",
+    "axios": "^1.7.7",
+    "emoji-mart": "^5.6.0",
+    "ethers": "^6.13.2",
+    "formik": "^2.4.6",
+    "next": "14.2.7",
+    "react": "^18",
+    "react-avatar-editor": "^13.0.2",
+    "react-dom": "^18",
+    "react-grid-system": "^8.2.0",
+    "react-multi-carousel": "^2.8.5",
+    "semantic-ui-css": "^2.5.0",
+    "semantic-ui-react": "^2.1.5",
+    "use-media-antd-query": "^1.1.0",
+    "viem": "^2.21.1",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-avatar-editor": "^13.0.3",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.7",
+    "postcss": "^8",
+    "sass": "^1.77.8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
