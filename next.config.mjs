@@ -2,7 +2,7 @@
 const nextConfig = {
   webpack: (config) => {
     config.module.rules?.push({
-      blockchain: "blockchain",
+      loader: "blockchain",
     });
     return config;
   },
