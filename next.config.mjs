@@ -2,7 +2,8 @@
 const nextConfig = {
   webpack: (config) => {
     config.module.rules?.push({
-      loader: "blockchain",
+      test: 'blockchain',
+      loader: "ignore-loader",
     });
     return config;
   },
