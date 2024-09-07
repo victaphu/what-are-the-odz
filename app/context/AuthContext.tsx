@@ -4,13 +4,23 @@ import { Web3Auth } from "@web3auth/modal";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { CHAIN_NAMESPACES, IProvider, UserInfo, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from "@web3auth/base";
 
+export interface UserBalance {
+  balance: number;
+  staked: number;
+  claimable: number;
+}
+
 interface AuthContextType {
   user: UserInfo & { evmAddress: string } | null;
+  userBalance: UserBalance;
   provider: any | null;
   login: () => void;
   logout: () => void;
   loading: boolean;
+  claim: () => void;
   refresh: () => void;
+  refreshBalance: () => void;
+  claiming: boolean;
 }
 
 const clientId = "BMDRGb6RMIj_u4k8FEmrjUTVyUTOs-xP_nQIcCfX9FAoS98ZLUo1hWeLdDYU_MM_a99l31FiJPQgS8SqCx6KHlw"; // Get this from Web3Auth Dashboard
@@ -120,6 +130,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserInfo & { evmAddress: string } | null>(null)
   const [provider, setProvider] = useState<IProvider | null>(null)
   const [loading, setLoading] = useState(true);
+  const [userBalance, setUserBalance] = useState<UserBalance>({ balance: 1000, staked: 100, claimable: 920 });
+  const [claiming, setClaiming] = useState(false);
 
   const getUser = async () => {
     const userInfo = await web3auth.getUserInfo() as UserInfo;
@@ -141,6 +153,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error(error)
     } finally {
       setLoading(false);
+    }
+  }
+
+  const refreshBalance = async () => {
+    setUserBalance({ balance: userBalance.balance, staked: 100, claimable: 920 });
+  }
+
+  const claim = async () => {
+    setClaiming(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
+      setUserBalance({ balance: userBalance.balance + userBalance.claimable, staked: 100, claimable: 0 });
+    }
+    finally {
+      setClaiming(false);
     }
   }
 
@@ -175,7 +202,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, provider, login, logout, refresh, loading }}>
+    <AuthContext.Provider value={{ user, provider, login, logout, refresh, loading, userBalance, refreshBalance, claim, claiming }}>
       {children}
     </AuthContext.Provider>
   );

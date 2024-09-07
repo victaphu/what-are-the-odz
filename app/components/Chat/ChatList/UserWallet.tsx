@@ -6,10 +6,10 @@ import { Card, Avatar, Typography, Space, Statistic, Button, Spin } from 'antd';
 const { Text } = Typography;
 
 const UserWallet: React.FC = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, claim, claiming, userBalance } = useAuth();
 
-  const odzBalance = 1000; // Replace with actual balance fetching logic
-  const stakedAmount = 500; // Replace with actual staked amount fetching logic
+  const odzBalance = userBalance.balance; // Replace with actual balance fetching logic
+  const stakedAmount = userBalance.staked; // Replace with actual staked amount fetching logic
 
   if (loading) {
     return (<Card className="ce-active-chat-card" style={{ margin: '5px', marginRight: '10px', background: 'inherit' }}>
@@ -49,7 +49,7 @@ const UserWallet: React.FC = () => {
             valueStyle={{ fontSize: '14px' }}
           />
         </Space>
-        <Button size='small'>Claim ᙇ1000.000</Button>
+        <Button size='small' disabled={loading || claiming || userBalance.claimable === 0} onClick={claim}>{claiming ? 'Claiming Odz' : `Claim ᙇ${userBalance.claimable}`}</Button>
       </Space>
     </Space>
   </Card>

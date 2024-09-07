@@ -13,50 +13,6 @@ const TheirMessage = (props: { message: any; lastMessage?: any; nextMessage?: an
     // const { conn } = useContext(ChatEngineContext)
     const [hovered, setHovered] = useState(false)
 
-    // function renderReads() {
-    //     const { chat, message } = props
-
-    //     if (!chat) { return <div /> }
-
-    //     return chat.people.map((person, index) => {
-    //         if (message.id === person.last_read) {
-    //             return (
-    //                 <Dot
-    //                     key={`read_${index}`}
-    //                     avatar={person.person.avatar}
-    //                     username={person.person.username}
-    //                     style={{ float: 'left', marginLeft: '4px' }}
-    //                 />
-    //             )
-    //         }
-    //         return <div key={`read_${index}`} />
-    //     })
-    // }
-
-    function getDateTime(date: string, offset: number) {
-        if (!date) return ''
-
-        date = date.replace(' ', 'T')
-        offset = offset ? offset : 0
-
-        const year = date.substring(0, 4)
-        const month = date.substring(5, 2)
-        const day = date.substring(8, 2)
-        const hour = date.substring(11, 2)
-        const minute = date.substring(14, 2)
-        const second = date.substring(17, 2)
-
-        var d = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`)
-        d.setHours(d.getHours() + offset)
-        return d
-    }
-
-
-
-    function formatTime(dateTime: string | Date) {
-        var time = dateTime.toLocaleString('en-US')
-        return time.split(' ')[1].slice(0, -3) + ' ' + time.slice(-2)
-    }
     function renderImages() {
         const { message } = props
         const attachments = message && message.attachments ? message.attachments : []
@@ -96,6 +52,8 @@ const TheirMessage = (props: { message: any; lastMessage?: any; nextMessage?: an
 
     const borderRadius = `${topLeftRadius} 1.3em 1.3em ${bottomLeftRadius}`
     const paddingBottom = !nextMessage || nextMessage.sender_username !== message.sender_username ? '12px' : '2px'
+
+    console.log(message)
 
     return (
         <div
@@ -143,7 +101,7 @@ const TheirMessage = (props: { message: any; lastMessage?: any; nextMessage?: an
                     </div>
 
                     {
-                        !attachments || (message.text &&
+                        (message.text &&
                             <div style={{ paddingLeft: '48px' }}>
                                 <div
                                     className='ce-message-bubble ce-their-message-bubble float-left'

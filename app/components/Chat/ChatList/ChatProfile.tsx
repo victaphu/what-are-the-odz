@@ -9,14 +9,15 @@ interface ChatProfile {
 
 const { Text } = Typography;
 
-const odzBalance = 1000; // Replace with actual balance fetching logic
-const stakedAmount = 500; // Replace with actual staked amount fetching logic
-
-
 export const ChatProfile = (props: ChatProfile) => {
 
-  const { user, logout, loading } = useAuth();
+  const { user, logout, loading, claim, userBalance, claiming } = useAuth();
   const router = useRouter();
+
+
+const odzBalance = userBalance.balance;
+const stakedAmount = userBalance.staked;
+
 
   const capitalize = (str: string, lower = true) => {
     return (lower ? str.toLowerCase() : str).replace(
@@ -81,7 +82,7 @@ export const ChatProfile = (props: ChatProfile) => {
           </Space>
         </Col>
         <Col span={24} style={{ textAlign: 'center' }}>
-          <Button>Claim ᙇ1000.000</Button>
+          <Button onClick={claim} disabled={claiming || userBalance.claimable === 0}>{claiming ? `Claiming Odz` : `Claim ᙇ${userBalance.claimable}`}</Button>
         </Col>
 
 

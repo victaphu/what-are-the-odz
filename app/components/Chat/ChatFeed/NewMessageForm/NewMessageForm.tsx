@@ -18,7 +18,7 @@ const NewMessageForm = () => {
     attachments: [] as File[]
   })
 
-  const { postMessage, loading } = useChat();
+  const { postMessage, loading, submittingChat } = useChat();
   const { activeGroup } = useGroups();
   const { user } = useAuth();
 
@@ -36,7 +36,7 @@ const NewMessageForm = () => {
     });
   }
 
-  function handleSubmit(event: { preventDefault: () => void; }) {
+  async function handleSubmit(event: { preventDefault: () => void; }) {
     event.preventDefault();
 
     setState({ ...state, value: '', attachments: [] })
@@ -44,8 +44,12 @@ const NewMessageForm = () => {
     var textarea = document.getElementById("msg-textarea")
     textarea!.style.height = "24px";
 
+    await publishChat();  
+  }
+  
+  async function publishChat() {
     const text = state.value.trim();
-    postMessage(activeGroup, {
+    await postMessage(activeGroup, {
       created: new Date().toLocaleString(),
       sender: {
         username: user?.name || user?.evmAddress || 'Frenz',
@@ -71,16 +75,17 @@ const NewMessageForm = () => {
             label='Send a message...'
             handleChange={handleChange.bind(this)}
             onSubmit={handleSubmit.bind(this)}
-            // disabled={loading}
+          // disabled={loading}
           />
         </div>
         <button
           type="submit"
           id='ce-send-message-button'
           style={{}}
-          disabled={loading}
+          disabled={loading || submittingChat}
+          onClick={publishChat}
         >
-          {loading ? (
+          {submittingChat ? (
             <Spin size="small" style={{ color: 'white' }} />
           ) : (
             <img src={'/images/send.png'} className="send-icon" alt="" />
