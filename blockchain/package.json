@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy:arb:testnet": "hardhat ignition deploy ./ignition/modules/Odz1155.ts --network arbitrumSepolia"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +18,8 @@
   "dependencies": {
     "@nomicfoundation/hardhat-ignition": "^0.15.5",
     "@openzeppelin/contracts": "^5.0.2",
-    "@typechain/hardhat": "^9.1.0"
+    "@typechain/hardhat": "^9.1.0",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.2"
   }
 }
