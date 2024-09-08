@@ -108,6 +108,26 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             emoji: "😀",
             // Add any other fields that are part of your Event type
           };
+
+          if (event.questions && event.questions.length > 0) {
+            convertedEvent.questions = event.questions.map((q: { attestationCount: any; choiceCount: any; choices: any[]; hasQuorum: any; questionId: any; result: any; totalBets: any; }, index: number) => ({
+              id: index.toString(),
+              text: `Question ${index + 1}`,
+              attestationCount: Number(q.attestationCount),
+              choiceCount: Number(q.choiceCount),
+              choices: q.choices.map((choice, choiceIndex) => ({
+                id: choiceIndex.toString(),
+                text: `Choice ${choiceIndex + 1}`,
+                userIds: [],
+                totalBets: Number(choice.totalBets)
+              })),
+              hasQuorum: q.hasQuorum,
+              questionId: Number(q.questionId),
+              result: Number(q.result),
+              totalBets: Number(q.totalBets)
+            }));
+          }
+
           console.log(event, convertedEvent);
           seededEvents.push(convertedEvent);
           setEvents(prevEvents => [...prevEvents, convertedEvent]);
