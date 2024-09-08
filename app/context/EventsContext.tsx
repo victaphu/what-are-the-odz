@@ -44,7 +44,6 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return;
     }
     const init = async () => {
-      console.log('account is', await ethRPC.getAccount());
       setOdz1155(new Odz1155Client("0x9DeD70f2cbc2E04B0E3e6f6a15f54AB8523EC845", await ethRPC.getWalletClient(), await ethRPC.getPublicClient()));
       const walletClient = await ethRPC?.getWalletClient();
       setSignClient(new SignClient(walletClient!));
@@ -54,6 +53,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [ethRPC])
 
   const createEvent = async (eventData: Partial<Event>) => {
+    console.log(eventData);
     setLoading(true);
     // Implement event creation logic here
     eventData.id = (events.length + 1).toString();
@@ -66,8 +66,8 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     console.log('create event', eventData);
     try {
-      const start = eventData.startDate!.getTime();
-      const end = eventData.endDate!.getTime();
+      const start = eventData.startDate!.getTime() / 1000;
+      const end = eventData.endDate!.getTime() / 1000;
       await odz1155?.createEvent(start, end,);
     }
     catch (e) {
@@ -87,14 +87,34 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const loadEvents = async (groupId: string) => {
     setLoading(true);
     try {
-      if (!events) {
-        return;
-      }
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
+      // if (!events) {
+      //   return;
+      // }
+      // await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
 
+      const event = await odz1155?.getEventDetails(5);
+      console.log(event, odz1155);
+      if (event) {
+        if (!events.find(e => e.id === "5" && e.groupId === "1")) {
+          const convertedEvent: Event = {
+            id: Number(event.eventId) + "",
+            title: "Event " + Number(event.eventId).toString(), // Assuming title is not returned from smart contract
+            description: "Description for Event " + event.eventId.toString(), // Assuming description is not returned from smart contract
+            startDate: new Date(Number(event.startTime) * 1000),
+            endDate: new Date(Number(event.endTime) * 1000),
+            groupId: "1", // Assuming groupId is not returned from smart contract
+            participants: [], // Assuming participants are not returned from smart contract
+            questions: [], // Assuming questions are not returned from smart contract
+            emoji: "😀",
+            // Add any other fields that are part of your Event type
+          };
+          console.log(event, convertedEvent);
+          seededEvents.push(convertedEvent);
+          setEvents(prevEvents => [...prevEvents, convertedEvent]);
+        }
+      }
       setEvents(seededEvents.filter(e => e.groupId === groupId));
 
-      console.log(await odz1155?.getEventDetails(+groupId));
     }
     finally {
       setLoading(false);

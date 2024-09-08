@@ -16,6 +16,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const { joinEvent, setShowDetailsEventDlg, loadEvent } = useEvents();
 
   const handleJoinEvent = async () => {
+    console.log('joining event', event.id);
     loadEvent(event.id);
     setShowDetailsEventDlg(true);
   };

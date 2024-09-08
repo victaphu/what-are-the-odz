@@ -52,6 +52,7 @@ const EventsDialog: React.FC = () => {
     attestResult,
     loadEvent: fetchEvent,
     event,
+    events,
     showDetailsEventDlg,
     setShowDetailsEventDlg,
   } = useEvents();
@@ -151,6 +152,8 @@ const EventsDialog: React.FC = () => {
 
     setChoices(items);
   };
+
+  // console.log('events is', event, events);
 
   if (!event) return null;
 

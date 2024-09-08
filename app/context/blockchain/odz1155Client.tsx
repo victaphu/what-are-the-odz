@@ -22,14 +22,21 @@ export class Odz1155Client {
   async createEvent(startTime: number, endTime: number): Promise<void> {
 
     // console.log('contract account is', this.account);
-    const { request } = await this.publicClient.simulateContract({
+    // const { request } = await this.publicClient.simulateContract({
+    //   address: this.contract.address,
+    //   abi: abi.abi,
+    //   functionName: 'createEvent',
+    //   args: [startTime, endTime],
+    //   account: this.account
+    // });
+    // console.log('request is', request);
+    await this.contract.write.writeContract({
       address: this.contract.address,
       abi: abi.abi,
       functionName: 'createEvent',
       args: [startTime, endTime],
       account: this.account
     });
-    await this.contract.write.writeContract(request);
   }
 
   async proposeQuestion(eventId: number, choiceCount: number): Promise<void> {
@@ -41,7 +48,7 @@ export class Odz1155Client {
       args: [eventId, choiceCount],
       account: this.account
     });
-    await this.contract.wallet.writeContract(request);
+    await this.contract.write.writeContract(request);
   }
 
   async joinEvent(eventId: number): Promise<void> {
@@ -53,7 +60,7 @@ export class Odz1155Client {
       args: [eventId],
       account: this.account
     });
-    await this.contract.wallet.writeContract(request);
+    await this.contract.write.writeContract(request);
   }
 
   async placeBet(eventId: number, questionId: number, choiceId: number): Promise<void> {
@@ -65,7 +72,7 @@ export class Odz1155Client {
       args: [eventId, questionId, choiceId],
       account: this.account
     });
-    await this.contract.wallet.writeContract(request);
+    await this.contract.write.writeContract(request);
   }
 
   async getEventDetails(eventId: number) {
