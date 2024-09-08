@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { Web3Auth } from "@web3auth/modal";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { CHAIN_NAMESPACES, IProvider, UserInfo, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from "@web3auth/base";
+import EthereumRPC from "@/app/context/blockchain/ethRPC";
 
 export interface UserBalance {
   balance: number;
@@ -133,6 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [userBalance, setUserBalance] = useState<UserBalance>({ balance: 1000, staked: 100, claimable: 920 });
   const [claiming, setClaiming] = useState(false);
+  const [ethRPC, setEthRPC] = useState<EthereumRPC | null>();
 
   const getUser = async () => {
     const userInfo = await web3auth.getUserInfo() as UserInfo;
@@ -150,7 +152,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       await web3auth.initModal(MODAL_PROPS)
       setProvider(web3auth.provider);
-
+      setEthRPC(new EthereumRPC(web3auth.provider!));
       if (web3auth.connected) {
         await getUser();
       }
@@ -185,6 +187,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       const web3authProvider = await web3auth.connect()
       setProvider(web3authProvider)
+      setEthRPC(new EthereumRPC(web3authProvider!));
       await getUser();
     } catch (error) {
       console.error(error)
@@ -197,9 +200,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     setLoading(true);
     try {
-      await web3auth.logout()
-      setProvider(null)
-      setUser(null)
+      await web3auth.logout();
+      setProvider(null);
+      setEthRPC(null);
+      setUser(null);
     }
     finally {
       setLoading(false);

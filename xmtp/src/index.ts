@@ -50,9 +50,9 @@ app.post('/postMessage', async (req, res) => {
 })
 
 app.post('/getMessages', async (req, res) => {
-  const { address, } = req.body;
+  const { address, topic } = req.body;
 
-  const result = await getMessages(address);
+  const result = await getMessages(address, topic);
 
   res.json({ result });
 })
@@ -64,3 +64,8 @@ app.post('/newGroup', async (req, res) => {
 
   res.json({ result });
 })
+
+// app.get('/test', async(req, res) => {
+//   console.log('testing', await symChat());
+//   res.send('Hello, World!');
+// });
