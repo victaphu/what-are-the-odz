@@ -5,6 +5,7 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { CHAIN_NAMESPACES, IProvider, UserInfo, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from "@web3auth/base";
 import EthereumRPC from "@/app/context/blockchain/ethRPC";
 import { useXMTP } from './blockchain/xmtpClient';
+import { arbitrumSepolia } from 'viem/chains';
 
 export interface UserBalance {
   balance: number;
@@ -30,10 +31,10 @@ interface AuthContextType {
 const clientId = "BMDRGb6RMIj_u4k8FEmrjUTVyUTOs-xP_nQIcCfX9FAoS98ZLUo1hWeLdDYU_MM_a99l31FiJPQgS8SqCx6KHlw"; // Get this from Web3Auth Dashboard
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0xaa36a7",
-  rpcTarget: "https://rpc.ankr.com/eth_sepolia",
-  displayName: "Ethereum Sepolia Testnet",
-  blockExplorerUrl: "https://sepolia.etherscan.io",
+  chainId: "0x66eee",
+  rpcTarget: arbitrumSepolia.rpcUrls.default.http[0],
+  displayName: "Arbitrum Sepolia Testnet",
+  blockExplorerUrl: arbitrumSepolia.blockExplorers.default.url,
   ticker: "ETH",
   tickerName: "Ethereum",
   logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
@@ -149,14 +150,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerUser = async (ethRPC: EthereumRPC) => {
 
+    setEthRPC(ethRPC);
+
     // user may or maynot be registered ...
-    const message = await getMessageToSign(await ethRPC.getAccount());
+    const message = await getMessageToSign((await ethRPC.getAccount()));
     console.log(message);
     const signature = await ethRPC.signMessage(message);
 
     console.log(message, signature, await ethRPC.getAccount());
 
-    const result = await register(await ethRPC.getAccount(), signature);
+    const result = await register((await ethRPC.getAccount()), signature);
     console.log(result);
   }
 
@@ -170,7 +173,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await web3auth.initModal(MODAL_PROPS)
       setProvider(web3auth.provider);
       const ethRPC = new EthereumRPC(web3auth.provider!);
-      setEthRPC(ethRPC);
       if (web3auth.connected) {
         await getUser();
         await registerUser(ethRPC);
@@ -207,7 +209,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const web3authProvider = await web3auth.connect()
       setProvider(web3authProvider)
       const ethRPC = new EthereumRPC(web3auth.provider!);
-      setEthRPC(ethRPC);
       if (web3auth.connected) {
         await getUser();
         await registerUser(ethRPC);

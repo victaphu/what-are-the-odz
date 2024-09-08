@@ -1,40 +1,78 @@
-
-import { Odz1155, Odz1155__factory } from '@/app/typechain-types';
-import { ethers } from 'ethers';
+import { Account, getContract, PublicClient } from 'viem';
+import { WalletClient } from 'viem';
+import abi from '@/app/abi/contracts/Odz1155.sol/Odz1155.json';
 
 
 export class Odz1155Client {
-  private contract: Odz1155;
+  private contract: any;
+  private publicClient: PublicClient;
+  private account: any;
 
-  constructor(contractAddress: string, provider: ethers.Provider) {
-    this.contract = Odz1155__factory.connect(contractAddress, provider);
+  constructor(contractAddress:  `0x${string}`, walletClient: WalletClient, publicClient: PublicClient) {
+    this.contract = getContract({
+      address: contractAddress,
+      abi: abi.abi,
+      client: { wallet: walletClient, public: publicClient },
+    });
+
+    this.publicClient = publicClient;
+    walletClient.getAddresses().then(addresses => this.account = addresses[0]);
   }
 
   async createEvent(startTime: number, endTime: number): Promise<void> {
-    const tx = await this.contract.createEvent(startTime, endTime);
-    await tx.wait();
+
+    // console.log('contract account is', this.account);
+    const { request } = await this.publicClient.simulateContract({
+      address: this.contract.address,
+      abi: abi.abi,
+      functionName: 'createEvent',
+      args: [startTime, endTime],
+      account: this.account
+    });
+    await this.contract.write.writeContract(request);
   }
 
   async proposeQuestion(eventId: number, choiceCount: number): Promise<void> {
-    const tx = await this.contract.proposeQuestion(eventId, choiceCount);
-    await tx.wait();
+
+    const { request } = await this.publicClient.simulateContract({
+      address: this.contract.address,
+      abi: abi.abi,
+      functionName: 'proposeQuestion',
+      args: [eventId, choiceCount],
+      account: this.account
+    });
+    await this.contract.wallet.writeContract(request);
   }
 
   async joinEvent(eventId: number): Promise<void> {
-    const tx = await this.contract.joinEvent(eventId);
-    await tx.wait();
+
+    const { request } = await this.publicClient.simulateContract({
+      address: this.contract.address,
+      abi: abi.abi,
+      functionName: 'joinEvent',
+      args: [eventId],
+      account: this.account
+    });
+    await this.contract.wallet.writeContract(request);
   }
 
-  async placeBet(eventId: number, questionId: number, choiceId: number,): Promise<void> {
-    const tx = await this.contract.placeBet(eventId, questionId, choiceId);
-    await tx.wait();
+  async placeBet(eventId: number, questionId: number, choiceId: number): Promise<void> {
+
+    const { request } = await this.publicClient.simulateContract({
+      address: this.contract.address,
+      abi: abi.abi,
+      functionName: 'placeBet',
+      args: [eventId, questionId, choiceId],
+      account: this.account
+    });
+    await this.contract.wallet.writeContract(request);
   }
 
-  async getEventDetails(eventId: number): Promise<Odz1155.ActiveEventInfoStructOutput> {
-    return await this.contract.getEventDetails(eventId);
+  async getEventDetails(eventId: number) {
+    return await this.contract.read.getEventDetails([eventId]);
   }
 
-  async getEvents(): Promise<Odz1155.ActiveEventInfoStructOutput[]> {
-    return await this.contract.getEvents();
+  async getEvents() {
+    return await this.contract.read.getEvents();
   }
 }

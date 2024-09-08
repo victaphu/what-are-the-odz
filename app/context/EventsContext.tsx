@@ -40,14 +40,18 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const { updateBalance, userBalance, provider, ethRPC, user } = useAuth();
 
   useEffect(() => {
+    if (!ethRPC) {
+      return;
+    }
     const init = async () => {
-      setOdz1155(new Odz1155Client("0x9DeD70f2cbc2E04B0E3e6f6a15f54AB8523EC845", provider));
+      console.log('account is', await ethRPC.getAccount());
+      setOdz1155(new Odz1155Client("0x9DeD70f2cbc2E04B0E3e6f6a15f54AB8523EC845", await ethRPC.getWalletClient(), await ethRPC.getPublicClient()));
       const walletClient = await ethRPC?.getWalletClient();
       setSignClient(new SignClient(walletClient!));
     }
 
     init();
-  }, [provider])
+  }, [ethRPC])
 
   const createEvent = async (eventData: Partial<Event>) => {
     setLoading(true);
