@@ -29,7 +29,8 @@ export const Connect = () => {
     };
 
     if (user) {
-        router.push('/home');
+        // router.push('/home');
+        window.location.href = '/home';
     }
 
     return (

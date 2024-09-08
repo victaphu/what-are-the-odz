@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/charts": "^2.2.1",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@hello-pangea/dnd": "^16.6.0",
@@ -27,6 +28,7 @@
     "react-dom": "^18",
     "react-grid-system": "^8.2.0",
     "react-multi-carousel": "^2.8.5",
+    "react-responsive": "^10.0.0",
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.5",
     "use-media-antd-query": "^1.1.0",

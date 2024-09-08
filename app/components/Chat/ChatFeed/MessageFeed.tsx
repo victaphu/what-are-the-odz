@@ -7,7 +7,7 @@ const ChatMessages: React.FC = () => {
   const { chats: messages, loading } = useChat();
   return (
     <div id="ce-feed-container" className="ce-chat-feed-container" style={{ width: '100%', height: '100%', maxHeight: '630px', overflow: 'hidden scroll', backgroundColor: 'white' }}>
-      <div className="ce-feed-container-top" style={{ height: '210px' }}></div>
+      <div className="ce-feed-container-top" style={{ height: '220px' }}></div>
       {!loading && messages?.map((message, index) => (
         <MessageBubble
           key={message.id}

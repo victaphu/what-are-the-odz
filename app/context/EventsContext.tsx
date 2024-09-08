@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { Choice, Event, UserParticipation } from '../components/Events/EventDialog';
+import { useAuth } from './AuthContext';
 
 interface EventContextType {
   loading: boolean;
@@ -31,15 +32,21 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const {updateBalance, userBalance} = useAuth();
+
+  console.log(events);
+
   const createEvent = async (eventData: Partial<Event>) => {
     setLoading(true);
     // Implement event creation logic here
     eventData.id = (events.length + 1).toString();
     await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
-
+    updateBalance(userBalance.balance - 100, userBalance.staked);
     setEvents([...events, eventData as Event]);
     setShowCreateEventDlg(false);
     seededEvents.push(eventData as Event);
+
+    console.log('create event', eventData)
 
     setLoading(false);
   };
@@ -72,7 +79,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const eventData = seededEvents.find(e => e.id === eventId);
       eventData?.participants.push({ userId });
       await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
-
+      updateBalance(userBalance.balance - 20, userBalance.staked + 10);
       setUserParticipation({ userId });
       setEvents([...events]);
     }
@@ -100,6 +107,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
         updatedEvent.questions.push(newQuestion);
         seededEvents[eventIndex] = updatedEvent;
+        updateBalance(userBalance.balance - 10, userBalance.staked);
         setEvent(updatedEvent);
         setEvents([...events]);
       }
@@ -125,6 +133,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       question.userAnswer = choiceId;
       question.choices.find(c => c.id === choiceId)!.userIds.push(userId);
+      updateBalance(userBalance.balance - 5, userBalance.staked);
       setEvents([...events]);
     } finally {
       setLoading(false);
@@ -243,7 +252,7 @@ async function fetchEvent(eventId: string): Promise<Event> {
 }
 
 function generateRandomEvents(): Event[] {
-  const eventCount = Math.floor(Math.random() * 12) + 5; // Random number between 5 and 10
+  const eventCount = 5; // Random number between 5 and 10
   const events: Event[] = [];
 
   for (let i = 0; i < eventCount; i++) {

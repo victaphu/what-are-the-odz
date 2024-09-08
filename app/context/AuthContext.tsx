@@ -21,6 +21,7 @@ interface AuthContextType {
   refresh: () => void;
   refreshBalance: () => void;
   claiming: boolean;
+  updateBalance: (balance: number, staked: number) => void;
 }
 
 const clientId = "BMDRGb6RMIj_u4k8FEmrjUTVyUTOs-xP_nQIcCfX9FAoS98ZLUo1hWeLdDYU_MM_a99l31FiJPQgS8SqCx6KHlw"; // Get this from Web3Auth Dashboard
@@ -140,6 +141,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser({ ...userInfo, evmAddress: userData.data.evmAddress });
   }
 
+  const updateBalance = async (balance: number, staked: number) => {
+    setUserBalance({ balance, staked, claimable: userBalance.claimable });
+  }
+
   const refresh = async () => {
     try {
       setLoading(true);
@@ -202,7 +207,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, provider, login, logout, refresh, loading, userBalance, refreshBalance, claim, claiming }}>
+    <AuthContext.Provider value={{ updateBalance, user, provider, login, logout, refresh, loading, userBalance, refreshBalance, claim, claiming }}>
       {children}
     </AuthContext.Provider>
   );

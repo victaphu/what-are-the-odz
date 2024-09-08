@@ -53,8 +53,6 @@ const TheirMessage = (props: { message: any; lastMessage?: any; nextMessage?: an
     const borderRadius = `${topLeftRadius} 1.3em 1.3em ${bottomLeftRadius}`
     const paddingBottom = !nextMessage || nextMessage.sender_username !== message.sender_username ? '12px' : '2px'
 
-    console.log(message)
-
     return (
         <div
             style={{ width: '100%', paddingBottom }}

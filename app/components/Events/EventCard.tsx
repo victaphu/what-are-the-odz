@@ -23,13 +23,14 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const hasJoined = event.participants.some(p => p.userId === user?.evmAddress);
 
   return (
-    <Card
-      size="small"
+    <div
       className="event-card ce-chat-card"
       style={{
         margin: '8px',
         borderRadius: '8px',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+        padding: '0px!important',
+        width: '200px',
       }}
     >
       <Space direction='horizontal' size="small">
@@ -72,7 +73,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           </Space>
         </Space>
       </Space >
-    </Card>
+    </div>
   );
 };
 

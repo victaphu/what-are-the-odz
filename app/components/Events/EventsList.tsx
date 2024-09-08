@@ -53,7 +53,7 @@ const EventsList: React.FC = () => {
 
   return (
     <div id="ce-feed-container-2" className="" style={{ width: '99%', display: 'grid', position: 'absolute', padding: '8px' }}>
-      <div className="ce-feed-container-top" style={{ height: '71px' }}></div>
+      <div className="ce-feed-container-top" style={{ height: '114px' }}></div>
       {loading && (
         <div style={{ zIndex: '1', width: '100%', display: 'grid', backgroundColor: 'var(--app-bg-color)' }}>
           <Spin size="large" style={{ margin: '0 auto', marginTop: '20px' }} />

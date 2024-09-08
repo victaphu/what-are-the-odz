@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Odz: Interactive Event Engagement Platform
+
+## Overview
+Odz is an innovative web application designed to enhance event experiences by allowing participants to create groups, set up events, and place bets on event-related questions using virtual Odz Coins. Our platform combines secure messaging, dynamic betting systems, and blockchain technology to create an engaging and interactive environment for all types of events.
+
+## Key Features
+- Event Creation: Organizers can create private groups for their events.
+- Prediction Setup: Set various outcomes for guests to predict.
+- Virtual Currency: Users receive Odz Coins for placing bets.
+- Real-time Odds: Dynamic updating of odds as bets are placed.
+- Consensus-based Verification: Ensures fair result determination.
+- Leaderboard: Showcases top predictors.
+- Smart Contracts: Ensures transparency and security.
+
+## Technology Stack
+- Frontend: React with TypeScript
+- Styling: Tailwind CSS
+- Blockchain: Ethereum (Hardhat for development)
+- Authentication: Web3Auth
+- Messaging: XMTP (Extensible Message Transport Protocol)
+- Digital Signatures: EthSign with Schema Hooks
 
 ## Getting Started
+1. Clone the repository: `git clone [repository-url]`
+2. Install dependencies: `npm install`
+3. Set up environment variables (see `.env.example`)
+4. Run the development server: `npm run dev`
 
-First, run the development server:
+## Integration Highlights
+- **EthSign (Sign Protocol) with Schema Hooks**: Utilized for secure digital signatures in event creation and bet placement.
+- **XMTP**: Implements secure and decentralized messaging for user communications within groups.
+- **Web3Auth**: Provides seamless Web3 authentication for users.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Important Links
+- [Live Demo](https://your-demo-link.com)
+- [API Documentation](https://your-api-docs-link.com)
+- [Smart Contract Repository](https://your-smart-contract-repo-link.com)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contributing
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for more details.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## License
+This project is licensed under the [MIT License](LICENSE.md).
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Contact
+For support or inquiries, please contact [your-email@example.com].
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Built with ❤️ for EthGlobal EthOnline 2024

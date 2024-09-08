@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ChatCard from "./ChatList/ChatCard";
 import ChatHeader from "./ChatFeed/ChatHeader";
-import axios from "axios";
 import NewChatForm from './ChatList/NewChatForm'
 import NewMessageForm from './ChatFeed/NewMessageForm/NewMessageForm'
 import ChatList from './ChatList/ChatList'
@@ -11,6 +10,7 @@ import ChatMessages from "./ChatFeed/MessageFeed";
 import EventsList from "../Events/EventsList";
 import { useGroups } from "@/app/context/GroupsContext";
 import { Empty, Space, Typography } from "antd";
+import LeaderPanel from '@/app/components/Leaderboard/leaderPanel';
 
 export const Chat = () => {
   const { user } = useAuth();
@@ -104,6 +104,7 @@ export const Chat = () => {
               className="ce-chat-feed"
             >
               <ChatHeader />
+              <LeaderPanel />
               <EventsList />
               <ChatMessages />
               <NewMessageForm />
