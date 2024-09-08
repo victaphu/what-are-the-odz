@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { Choice, Event, UserParticipation } from '../components/Events/EventDialog';
 import { useAuth } from './AuthContext';
+import { Odz1155Client } from './blockchain/odz1155Client';
+import SignClient from './blockchain/signClient';
 
 interface EventContextType {
   loading: boolean;
@@ -31,10 +33,21 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [userParticipation, setUserParticipation] = useState<UserParticipation | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
+  const [odz1155, setOdz1155] = useState<Odz1155Client | null>();
 
-  const {updateBalance, userBalance} = useAuth();
+  const [signClient, setSignClient] = useState<SignClient | null>(null);
 
-  console.log(events);
+  const { updateBalance, userBalance, provider, ethRPC, user } = useAuth();
+
+  useEffect(() => {
+    const init = async () => {
+      setOdz1155(new Odz1155Client("0x9DeD70f2cbc2E04B0E3e6f6a15f54AB8523EC845", provider));
+      const walletClient = await ethRPC?.getWalletClient();
+      setSignClient(new SignClient(walletClient!));
+    }
+
+    init();
+  }, [provider])
 
   const createEvent = async (eventData: Partial<Event>) => {
     setLoading(true);
@@ -43,10 +56,19 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
     updateBalance(userBalance.balance - 100, userBalance.staked);
     setEvents([...events, eventData as Event]);
+
     setShowCreateEventDlg(false);
     seededEvents.push(eventData as Event);
 
-    console.log('create event', eventData)
+    console.log('create event', eventData);
+    try {
+      const start = eventData.startDate!.getTime();
+      const end = eventData.endDate!.getTime();
+      await odz1155?.createEvent(start, end,);
+    }
+    catch (e) {
+      console.log('failed to mint', e);
+    }
 
     setLoading(false);
   };
@@ -63,10 +85,12 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       if (!events) {
         return;
-      }      
+      }
       await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
 
       setEvents(seededEvents.filter(e => e.groupId === groupId));
+
+      console.log(await odz1155?.getEventDetails(+groupId));
     }
     finally {
       setLoading(false);
@@ -82,6 +106,13 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       updateBalance(userBalance.balance - 20, userBalance.staked + 10);
       setUserParticipation({ userId });
       setEvents([...events]);
+
+      try {
+        await odz1155?.joinEvent(+eventId);
+      }
+      catch (e) {
+        console.log('failed join events', e);
+      }
     }
     finally {
       setLoading(false);
@@ -110,6 +141,13 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         updateBalance(userBalance.balance - 10, userBalance.staked);
         setEvent(updatedEvent);
         setEvents([...events]);
+
+        try {
+          await odz1155?.proposeQuestion(+eventId, choices.length,);
+        }
+        catch (e) {
+          console.log('failed txn', e);
+        }
       }
     } finally {
       setLoading(false);
@@ -135,6 +173,13 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       question.choices.find(c => c.id === choiceId)!.userIds.push(userId);
       updateBalance(userBalance.balance - 5, userBalance.staked);
       setEvents([...events]);
+
+      try {
+        await odz1155?.placeBet(+eventId, +questionId, +choiceId);
+      }
+      catch (e) {
+        console.log('failed txn', e);
+      }
     } finally {
       setLoading(false);
     }
@@ -189,6 +234,11 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       setEvents([...events]);
       setEvent(eventData);
+      try {
+        await signClient?.attest(user?.evmAddress!, +eventId, +questionId, +choiceId);
+      } catch (e) {
+        console.log('sign client failed', e);
+      }
     } finally {
       setLoading(false);
     }
@@ -307,41 +357,3 @@ function generateRandomEvents(): Event[] {
   return events;
 }
 
-async function joinEventAPI(eventId: string, userId: string): Promise<Event> {
-  // Mock API call to join event
-  const event = await fetchEvent(eventId)
-  event.participants.push({ userId })
-  return event
-}
-
-async function proposeQuestionAPI(eventId: string, userId: string, questionText: string): Promise<Event> {
-  // Mock API call to propose question
-  const event = await fetchEvent(eventId)
-  const newQuestion = {
-    id: `q${event.questions.length + 1}`,
-    text: questionText,
-    choices: []
-  }
-  event.questions.push(newQuestion)
-  return event
-}
-
-async function answerQuestionAPI(eventId: string, questionId: string, userId: string, choiceId: string): Promise<Event> {
-  // Mock API call to answer question
-  const event = await fetchEvent(eventId)
-  const question = event.questions.find(q => q.id === questionId)
-  if (question) {
-    question.userAnswer = choiceId
-  }
-  return event
-}
-
-async function attestResultAPI(eventId: string, questionId: string, userId: string, choiceId: string): Promise<Event> {
-  // Mock API call to attest result
-  const event = await fetchEvent(eventId)
-  const question = event.questions.find(q => q.id === questionId)
-  // if (question) {
-  //   question.attestation = { userId, choiceId }
-  // }
-  return event
-}

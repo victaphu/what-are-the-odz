@@ -23,17 +23,20 @@ export default class EthereumRPC {
         return addresses[0];
     }
 
+    async getWalletClient(): Promise<WalletClient> {
+        return this.walletClient;
+    }
+
     async fetchBalance(): Promise<string> {
         const address = await this.getAccount();
         const balance = await this.publicClient.getBalance({ address: address as any });
         return formatEther(balance);
     }
 
-    async signMessage(): Promise<string> {
+    async signMessage(message: string): Promise<string> {
 
         const address = await this.getAccount();
-        const message = "Sign Protocol Demo";
-
+        console.log('signing using', address);
         // Sign the message
         const hash = await this.walletClient.signMessage({
             account: address as any,

@@ -3,8 +3,7 @@ import * as dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
-import { getClientSignature, getMessages, newGroup } from './chat/createClient';
-import { register } from 'module';
+import { getClientSignature, getMessages, newGroup, register } from './chat/createClient';
 
 //App Varaibles 
 dotenv.config()

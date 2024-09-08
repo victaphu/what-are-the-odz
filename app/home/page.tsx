@@ -11,6 +11,7 @@ import { WalletProvider } from "../context/WalletContext";
 import { LeaderBoardContext } from "../context/LeaderboardContext";
 import LeaderboardComponent from "../components/Leaderboard/leaderboardDialog";
 import React from "react";
+import { XMTPProvider } from '@/app/context/blockchain/xmtpClient';
 
 export default function Home() {
   const [showSplash, setShowSplash] = React.useState(true);
@@ -48,23 +49,25 @@ export default function Home() {
       )}
       <div className="root">
         <main className="app">
-          <AuthProvider>
-            <GroupsProvider>
-              <ChatProvider>
-                <EventProvider>
-                  <WalletProvider>
-                    <LeaderBoardContext>
-                      <Chat />
-                      <CreateGroupDialog />
-                      <CreateEventDialog />
-                      <EventsDialog />
-                      <LeaderboardComponent />
-                    </LeaderBoardContext>
-                  </WalletProvider>
-                </EventProvider>
-              </ChatProvider>
-            </GroupsProvider>
-          </AuthProvider>
+          <XMTPProvider>
+            <AuthProvider>
+              <GroupsProvider>
+                <ChatProvider>
+                  <EventProvider>
+                    <WalletProvider>
+                      <LeaderBoardContext>
+                        <Chat />
+                        <CreateGroupDialog />
+                        <CreateEventDialog />
+                        <EventsDialog />
+                        <LeaderboardComponent />
+                      </LeaderBoardContext>
+                    </WalletProvider>
+                  </EventProvider>
+                </ChatProvider>
+              </GroupsProvider>
+            </AuthProvider>
+          </XMTPProvider>
         </main>
       </div>
     </div>)
